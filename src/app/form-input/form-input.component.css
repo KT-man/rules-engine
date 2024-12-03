@@ -1,0 +1,30 @@
+/* :host ::ng-deep .p-dropdown {
+  width: 15rem;
+  background-color: aqua;
+}
+
+:host ::ng-deep .p-dropdown ul {
+  width: 15rem;
+  background-color: aqua;
+  border: 1px solid black;
+}
+
+:host ::ng-deep .p-dropdown-item {
+  width: 15rem;
+  background-color: aqua;
+} */
+
+div {
+  display: flex;
+  flex-direction: row;
+}
+
+p {
+  margin: 0;
+}
+
+.formInputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

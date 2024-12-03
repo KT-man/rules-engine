@@ -1,1 +1,45 @@
-<p>form-input works!</p>
+<div class="formInputWrapper">
+  <p>Rule builder input</p>
+  <p>
+    Start building your filter rules by adding conditions with the input fields
+    below
+  </p>
+  <form [formGroup]="rulesForm" (ngSubmit)="onSubmit()">
+    <!-- Selection for column to filter by -->
+    <div>
+      <label for="column">Field:</label>
+      <p-dropdown
+        id="column"
+        [options]="columnOptionData"
+        formControlName="column"
+        placeholder="Select a column"
+      />
+    </div>
+    <!-- Selection for value type -->
+    <div>
+      <label for="valueType">Value Type:</label>
+      <input id="valueType" type="text" formControlName="valueType" />
+    </div>
+    <!-- Selection for filter value -->
+    <div>
+      <label for="filtervalue">Filter Value:</label>
+      <input id="filterValue" type="text" formControlName="filterValue" />
+    </div>
+    <!-- Selection for filter rule condition -->
+    <div>
+      <label for="ruleCondition">Filter Condition:</label>
+      <input id="ruleCondition" type="text" formControlName="filterCondition" />
+    </div>
+    <!-- Selection for condition operator Type -->
+    <div>
+      <label for="logicalOperator">Logical Operator:</label>
+      <input
+        id="logicalOperator"
+        type="text"
+        formControlName="logicalOperator"
+      />
+    </div>
+    <button>Add condition:</button>
+  </form>
+  <div>Conditions for current rule:</div>
+</div>
