@@ -99,7 +99,6 @@ export class FormInputComponent implements OnInit {
     this.logicalOperatorOptionData = [
       { label: 'AND', value: 'AND' },
       { label: 'OR', value: 'OR' },
-      { label: '-Clear selected value-', value: '' },
     ];
   }
 }
