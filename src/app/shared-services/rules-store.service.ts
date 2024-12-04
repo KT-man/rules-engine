@@ -26,9 +26,15 @@ export class RulesStoreService {
   }
 
   // Setter for rulesStore, adds a new rule and emits the updated value
-  setRulesStore(newRule: RulesType) {
+  addToRulesStore(newRule: RulesType) {
     this.rulesStore.push(newRule); // Add the new rule to the array
     this.rulesStoreSubject.next(this.rulesStore); // Emit the updated value
+  }
+
+  // Setter for rulesStore, replaces entire rulesStore with a new set of values
+  setRulesStore(newRulesStore: Array<RulesType>) {
+    this.rulesStore = newRulesStore;
+    this.rulesStoreSubject.next(this.rulesStore);
   }
 
   // Getter for the observable of the rulesStore

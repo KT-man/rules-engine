@@ -161,7 +161,6 @@ export class DataTableComponent implements OnInit {
 
           // Get the value from the data object based on the column
           const columnValue = data[column];
-          console.log({ columnValue });
 
           let conditionMet = false;
 
@@ -189,19 +188,22 @@ export class DataTableComponent implements OnInit {
             /** @todo Further clarification on whether these filters should be case-sensitive */
             case FilterConditionEnum.CONTAINS:
               if (valueType === 'Text' && typeof columnValue === 'string') {
-                conditionMet = columnValue.includes(filterValue as string);
+                conditionMet = columnValue.includes(
+                  (filterValue as string).trim()
+                );
               }
               break;
             /** @todo Further clarification on whether these filters should be case-sensitive */
             case FilterConditionEnum.NOT_CONTAINS:
               if (valueType === 'Text' && typeof columnValue === 'string') {
-                conditionMet = !columnValue.includes(filterValue as string);
+                conditionMet = !columnValue.includes(
+                  (filterValue as string).trim()
+                );
               }
               break;
             /** @todo Further clarification on whether these filters should be case-sensitive */
             case FilterConditionEnum.BEGIN_WITH:
               if (valueType === 'Text' && typeof columnValue === 'string') {
-                console.log({ columnValue, filterValue });
                 conditionMet = columnValue.startsWith(filterValue as string);
               }
               break;
@@ -222,7 +224,6 @@ export class DataTableComponent implements OnInit {
           }
 
           /**
-           * Additional check to remove logical operator if not needed
            * Apply logical operator to combine conditions
            * */
           if (index === 0) {
@@ -232,7 +233,8 @@ export class DataTableComponent implements OnInit {
           // Apply logical operator between conditions
           if (logicalOperator === 'AND') {
             return acc && conditionMet; // AND means all conditions must be true
-          } else if (logicalOperator === 'OR') {
+          }
+          if (logicalOperator === 'OR') {
             return acc || conditionMet; // OR means at least one condition must be true
           }
 
@@ -243,8 +245,6 @@ export class DataTableComponent implements OnInit {
       });
     });
 
-    console.log({ filteredTableData });
-
-    return filteredTableData;
+    return [...filteredTableData];
   }
 }

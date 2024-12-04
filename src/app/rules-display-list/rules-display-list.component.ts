@@ -48,14 +48,33 @@ export class RulesDisplayListComponent implements OnInit {
         : this.rulesStoreService.getRulesStore();
 
     this.saveRules = () => {
+      const existingRules = window.localStorage.getItem('rules');
+      /** If there is a saved version, save to previousRules */
+      if (existingRules) {
+        window.localStorage.setItem('previousRules', existingRules);
+      }
+
       window.localStorage.setItem('rules', JSON.stringify(this.currentRules));
     };
 
     this.removeAllRules = () => {
       /** Remove from storage */
-      window.localStorage.clear();
+      window.localStorage.removeItem('rules');
       /** Remove from service */
       this.rulesStoreService.clearRulesStore();
+    };
+
+    this.revertRules = () => {
+      /**
+       * @todo a better implementation would be to implement rules added as a stack and to remove FIFO to revert
+       * This only works one level deep
+       */
+      const previousRules = window.localStorage.getItem('previousRules');
+
+      if (previousRules) {
+        window.localStorage.setItem('rules', previousRules);
+        this.rulesStoreService.setRulesStore(JSON.parse(previousRules));
+      }
     };
   }
 
