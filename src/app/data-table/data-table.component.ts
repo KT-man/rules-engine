@@ -1,13 +1,10 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
+import {
+  OptionDataInterface,
+  TableHeaderDataService,
+} from '../shared-services/table-header-data.service';
 
 @Component({
   selector: 'app-data-table',
@@ -18,11 +15,9 @@ import { TableModule } from 'primeng/table';
 })
 export class DataTableComponent implements OnInit {
   tableData: Array<Record<string, string | number>>;
-  titleCaseHeaders: string[] = [];
-  @Input() tableHeadersData: string[] = [];
-  @Output() tableHeadersDataChange = new EventEmitter<string[]>();
-
-  constructor(private cd: ChangeDetectorRef) {}
+  headerLabels: string[];
+  titleCaseHeaders: OptionDataInterface[] = [];
+  constructor(private service: TableHeaderDataService) {}
 
   ngOnInit(): void {
     /**
@@ -82,8 +77,9 @@ export class DataTableComponent implements OnInit {
 
     // Retrieve headers from tableData
     const dataRow = this.tableData[0];
+    const dataRowHeaders = Object.keys(dataRow);
 
-    this.titleCaseHeaders = Object.keys(dataRow).map((header) => {
+    this.headerLabels = Object.keys(dataRow).map((header) => {
       const spacedStr = header.replace(/([a-z])([A-Z])/g, '$1 $2');
 
       const titleCaseStr = spacedStr
@@ -95,5 +91,11 @@ export class DataTableComponent implements OnInit {
 
       return titleCaseStr;
     });
+
+    this.titleCaseHeaders = this.headerLabels.map((label, index) => {
+      return { label, value: dataRowHeaders[index] };
+    });
+
+    this.service.setTableHeaderData(this.titleCaseHeaders);
   }
 }

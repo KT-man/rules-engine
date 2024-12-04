@@ -33,7 +33,5 @@ export class AppComponent implements OnInit {
     };
 
     this.primengConfig.ripple = true;
-
-    console.log(this.tableHeadersData);
   }
 }

@@ -4,42 +4,91 @@
     Start building your filter rules by adding conditions with the input fields
     below
   </p>
-  <form [formGroup]="rulesForm" (ngSubmit)="onSubmit()">
+  <p>
+    Leave the LOGICAL OPERATOR option empty for the last condition of a rule
+  </p>
+  <form [formGroup]="rulesForm" (ngSubmit)="addConditionHandler()">
     <!-- Selection for column to filter by -->
     <div>
       <label for="column">Field:</label>
       <p-dropdown
+        name="column"
         id="column"
         [options]="columnOptionData"
         formControlName="column"
         placeholder="Select a column"
+        required
       />
     </div>
     <!-- Selection for value type -->
     <div>
       <label for="valueType">Value Type:</label>
-      <input id="valueType" type="text" formControlName="valueType" />
+      <p-dropdown
+        id="valueType"
+        [options]="valueTypeOptionData"
+        formControlName="valueType"
+        required
+      />
     </div>
     <!-- Selection for filter value -->
     <div>
       <label for="filtervalue">Filter Value:</label>
-      <input id="filterValue" type="text" formControlName="filterValue" />
+      <input
+        pInputText
+        id="filterValue"
+        type="text"
+        formControlName="filterValue"
+        required
+      />
     </div>
     <!-- Selection for filter rule condition -->
     <div>
-      <label for="ruleCondition">Filter Condition:</label>
-      <input id="ruleCondition" type="text" formControlName="filterCondition" />
+      <label for="filterCondition">Filter Condition:</label>
+      <p-dropdown
+        id="filterCondition"
+        type="text"
+        formControlName="filterCondition"
+        [options]="filterConditionOptionData"
+        required
+      />
     </div>
     <!-- Selection for condition operator Type -->
     <div>
       <label for="logicalOperator">Logical Operator:</label>
-      <input
+      <p-dropdown
         id="logicalOperator"
-        type="text"
         formControlName="logicalOperator"
+        [options]="logicalOperatorOptionData"
       />
     </div>
-    <button>Add condition:</button>
+    <p-button type="submit" severity="secondary" [disabled]="rulesForm.invalid"
+      >Add condition to filter rule</p-button
+    >
   </form>
-  <div>Conditions for current rule:</div>
+  <div>
+    <p>Conditions for current rule:</p>
+    <ul>
+      <li *ngFor="let condition of currentConditions">
+        {{
+          "Filter " +
+            condition.column +
+            " where values are " +
+            FilterConditionEnum[condition.filterCondition].replaceAll(
+              "_",
+              " "
+            ) +
+            " " +
+            condition.filterValue +
+            " " +
+            (condition.logicalOperator || "")
+        }}
+      </li>
+    </ul>
+  </div>
+  <p-button
+    type="button"
+    [disabled]="currentConditions.length === 0"
+    (onClick)="confirmRuleHandler()"
+    >Submit rule</p-button
+  >
 </div>

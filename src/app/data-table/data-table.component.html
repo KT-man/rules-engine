@@ -1,7 +1,7 @@
 <p-table [value]="tableData">
   <ng-template pTemplate="header">
     <tr>
-      <th *ngFor="let header of titleCaseHeaders; index as i">{{ header }}</th>
+      <th *ngFor="let header of headerLabels; index as i">{{ header }}</th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-dataRow>

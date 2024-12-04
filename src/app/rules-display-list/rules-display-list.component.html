@@ -1,1 +1,6 @@
-<p>Current rules created:</p>
+<div>
+  <p>Current rules applied:</p>
+  <div *ngFor="let rule of currentRules; index as i">
+    <p-card [header]="'Rule ' + (i + 1) + ':'"> </p-card>
+  </div>
+</div>
