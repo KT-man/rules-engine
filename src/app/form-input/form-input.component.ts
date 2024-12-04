@@ -35,7 +35,7 @@ export class FormInputComponent implements OnInit {
 
   /** Options for dropdown fields */
   columnOptionData: OptionDataInterface[] = [{ label: '', value: '' }];
-  valueTypeOptionData: string[] = ['Date', 'Text', 'Number'];
+  valueTypeOptionData: string[] = ['Text', 'Number'];
   filterConditionOptionData: OptionDataInterface[] = [{ label: '', value: '' }];
   logicalOperatorOptionData: OptionDataInterface[] = [{ label: '', value: '' }];
   /** Form related variables */

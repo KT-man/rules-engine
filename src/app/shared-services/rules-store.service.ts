@@ -35,4 +35,10 @@ export class RulesStoreService {
   getObservableRulesStore() {
     return this.rulesStoreSubject.asObservable();
   }
+
+  /** Method to remove all rules in rulesStore */
+  clearRulesStore() {
+    this.rulesStore = [];
+    this.rulesStoreSubject.next(this.rulesStore); // Emit the updated value
+  }
 }

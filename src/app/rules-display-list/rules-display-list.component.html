@@ -21,4 +21,13 @@
       </ul>
     </p-card>
   </div>
+  <div class="buttonWrapper">
+    <p-button type="button" (onClick)="saveRules()">Save current rule</p-button>
+    <p-button type="button" (onClick)="revertRules()"
+      >Revert to previous rules</p-button
+    >
+    <p-button type="button" (onClick)="removeAllRules()"
+      >Remove all rules</p-button
+    >
+  </div>
 </div>
