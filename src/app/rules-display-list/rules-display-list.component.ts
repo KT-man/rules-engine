@@ -34,7 +34,6 @@ export class RulesDisplayListComponent implements OnInit {
       .subscribe((rule) => {
         /** Update local rules when rules service has been updated */
         this.currentRules = rule;
-        console.log(rule);
       });
 
     /** Retrieve from localStorage if any */
