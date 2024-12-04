@@ -68,8 +68,18 @@ export class FormInputComponent implements OnInit {
 
     this.confirmRuleHandler = () => {
       /** Push new rule to rule-store-service */
-      console.log('Pushing rule');
-      const newRule = this.currentConditions;
+      /** Update condition to remove logicalOperator from last condition */
+      const currentCondition = this.currentConditions;
+      const updatedCondition = currentCondition.map((condition, index) => {
+        /** Remove logical operator from last entry */
+        if (index === this.currentConditions.length - 1) {
+          return { ...condition, logicalOperator: '' };
+        }
+
+        return condition;
+      });
+
+      const newRule = updatedCondition;
       this.rulesStoreService.setRulesStore(newRule);
 
       /** Clear out all currentConditions */

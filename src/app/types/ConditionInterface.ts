@@ -5,7 +5,7 @@ interface ConditionInterface {
   column: string;
   filterCondition: FilterConditionEnum;
   filterValue: number | string;
-  logicalOperator: 'AND' | 'OR';
+  logicalOperator: string;
   valueType: 'Date' | 'Text' | 'Number';
 }
 

@@ -10,6 +10,7 @@ import {
   OptionDataInterface,
   TableHeaderDataService,
 } from '../shared-services/table-header-data.service';
+import FilterConditionEnum from '../types/FilterConditionEnum';
 
 @Component({
   selector: 'app-data-table',
@@ -19,10 +20,13 @@ import {
   styleUrl: './data-table.component.css',
 })
 export class DataTableComponent implements OnInit {
+  /** Initial Table Data to be presented when data is loaded */
   tableData: Array<Record<string, string | number>>;
   headerLabels: string[];
   titleCaseHeaders: OptionDataInterface[] = [];
   currentRules: Array<RulesType>;
+  /** Final filteredTableData that is used for rendering */
+  filteredTableData: Array<Record<string, string | number>>;
 
   private rulesSubscription: Subscription;
 
@@ -115,11 +119,14 @@ export class DataTableComponent implements OnInit {
     this.rulesSubscription = this.rulesStoreService
       .getObservableRulesStore()
       .subscribe((rule) => {
+        /** Update local rules when rules service has been updated */
         this.currentRules = rule;
-        this.applyFilters(this.tableData, this.currentRules);
+        /** Update table data when rules service has been updated */
+        this.filteredTableData = this.applyFilters(
+          this.tableData,
+          this.currentRules
+        );
       });
-
-    this.applyFilters(this.tableData, this.currentRules);
   }
 
   ngOnDestroy(): void {
@@ -141,8 +148,102 @@ export class DataTableComponent implements OnInit {
     }
 
     const filteredTableData = tableData.filter((data) => {
-      return data;
+      return rules.every((ruleConditions) => {
+        // For each rule set (joined by AND/OR)
+        const ruleResult = ruleConditions.reduce((acc, condition, index) => {
+          const {
+            column,
+            filterCondition,
+            filterValue,
+            logicalOperator,
+            valueType,
+          } = condition;
+
+          // Get the value from the data object based on the column
+          const columnValue = data[column];
+          console.log({ columnValue });
+
+          let conditionMet = false;
+
+          /**
+           * @todo Update handling to account for mismatched types i.e. Beginning with... Number Type should not work
+           * Compare based on FilterConditionEnum
+           * */
+          switch (filterCondition) {
+            /** @todo Further clarification on whether these filters not be applied to strings */
+            case FilterConditionEnum.GREATER_THAN:
+              conditionMet = columnValue > filterValue;
+              break;
+            /** @todo Further clarification on whether these filters not be applied to strings */
+            case FilterConditionEnum.GREATER_THAN_OR_EQUAL_TO:
+              conditionMet = columnValue >= filterValue;
+              break;
+            /** @todo Further clarification on whether these filters not be applied to strings */
+            case FilterConditionEnum.LESS_THAN:
+              conditionMet = columnValue < filterValue;
+              break;
+            /** @todo Further clarification on whether these filters not be applied to strings */
+            case FilterConditionEnum.LESS_THAN_OR_EQUAL_TO:
+              conditionMet = columnValue <= filterValue;
+              break;
+            /** @todo Further clarification on whether these filters should be case-sensitive */
+            case FilterConditionEnum.CONTAINS:
+              if (valueType === 'Text' && typeof columnValue === 'string') {
+                conditionMet = columnValue.includes(filterValue as string);
+              }
+              break;
+            /** @todo Further clarification on whether these filters should be case-sensitive */
+            case FilterConditionEnum.NOT_CONTAINS:
+              if (valueType === 'Text' && typeof columnValue === 'string') {
+                conditionMet = !columnValue.includes(filterValue as string);
+              }
+              break;
+            /** @todo Further clarification on whether these filters should be case-sensitive */
+            case FilterConditionEnum.BEGIN_WITH:
+              if (valueType === 'Text' && typeof columnValue === 'string') {
+                console.log({ columnValue, filterValue });
+                conditionMet = columnValue.startsWith(filterValue as string);
+              }
+              break;
+            /** @todo Further clarification on whether these filters should be case-sensitive */
+            case FilterConditionEnum.END_WITH:
+              if (valueType === 'Text' && typeof columnValue === 'string') {
+                conditionMet = columnValue.endsWith(filterValue as string);
+              }
+              break;
+            case FilterConditionEnum.EQUAL_TO:
+              conditionMet = columnValue === filterValue;
+              break;
+            case FilterConditionEnum.NOT_EQUAL_TO:
+              conditionMet = columnValue !== filterValue;
+              break;
+            default:
+              conditionMet = false;
+          }
+
+          /**
+           * Additional check to remove logical operator if not needed
+           * Apply logical operator to combine conditions
+           * */
+          if (index === 0) {
+            return conditionMet;
+          }
+
+          // Apply logical operator between conditions
+          if (logicalOperator === 'AND') {
+            return acc && conditionMet; // AND means all conditions must be true
+          } else if (logicalOperator === 'OR') {
+            return acc || conditionMet; // OR means at least one condition must be true
+          }
+
+          return acc;
+        }, true);
+
+        return ruleResult; // Only include data if all conditions are met
+      });
     });
+
+    console.log({ filteredTableData });
 
     return filteredTableData;
   }
