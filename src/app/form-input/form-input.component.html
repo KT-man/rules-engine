@@ -20,6 +20,17 @@
         required
       />
     </div>
+    <!-- Selection for filter rule condition -->
+    <div>
+      <label for="filterCondition">Filter Condition:</label>
+      <p-dropdown
+        id="filterCondition"
+        type="text"
+        formControlName="filterCondition"
+        [options]="filterConditionOptionData"
+        required
+      />
+    </div>
     <!-- Selection for value type -->
     <div>
       <label for="valueType">Value Type:</label>
@@ -38,17 +49,6 @@
         id="filterValue"
         type="text"
         formControlName="filterValue"
-        required
-      />
-    </div>
-    <!-- Selection for filter rule condition -->
-    <div>
-      <label for="filterCondition">Filter Condition:</label>
-      <p-dropdown
-        id="filterCondition"
-        type="text"
-        formControlName="filterCondition"
-        [options]="filterConditionOptionData"
         required
       />
     </div>

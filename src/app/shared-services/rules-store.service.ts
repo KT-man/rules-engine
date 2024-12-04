@@ -1,25 +1,38 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import ConditionInterface from '../types/ConditionInterface';
 
 export type RulesType = Array<ConditionInterface>;
+
+export interface RulesInterface {
+  rules: RulesType;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class RulesStoreService {
-  /**
-   * Each Rule is an array of conditions
-   * Rule Store is an array of rules
-   */
+  constructor() {}
+
+  // Private variable to store rules
   private rulesStore: Array<RulesType> = [];
 
+  private rulesStoreSubject: BehaviorSubject<Array<RulesType>> =
+    new BehaviorSubject<Array<RulesType>>(this.rulesStore);
+
+  // Getter for the rules (returns an observable of the rules)
   getRulesStore() {
     return this.rulesStore;
   }
 
+  // Setter for rulesStore, adds a new rule and emits the updated value
   setRulesStore(newRule: RulesType) {
-    /** Add the newest rule as the last element of array */
-    this.rulesStore.push(newRule);
-    console.log(this.rulesStore);
+    this.rulesStore.push(newRule); // Add the new rule to the array
+    this.rulesStoreSubject.next(this.rulesStore); // Emit the updated value
+  }
+
+  // Getter for the observable of the rulesStore
+  getObservableRulesStore() {
+    return this.rulesStoreSubject.asObservable();
   }
 }

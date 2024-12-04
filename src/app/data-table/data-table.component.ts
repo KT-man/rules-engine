@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
+import { Subscription } from 'rxjs';
+import {
+  RulesStoreService,
+  RulesType,
+} from '../shared-services/rules-store.service';
 import {
   OptionDataInterface,
   TableHeaderDataService,
@@ -17,7 +22,14 @@ export class DataTableComponent implements OnInit {
   tableData: Array<Record<string, string | number>>;
   headerLabels: string[];
   titleCaseHeaders: OptionDataInterface[] = [];
-  constructor(private service: TableHeaderDataService) {}
+  currentRules: Array<RulesType>;
+
+  private rulesSubscription: Subscription;
+
+  constructor(
+    private tableHeaderDataService: TableHeaderDataService,
+    private rulesStoreService: RulesStoreService
+  ) {}
 
   ngOnInit(): void {
     /**
@@ -75,7 +87,7 @@ export class DataTableComponent implements OnInit {
       },
     ];
 
-    // Retrieve headers from tableData
+    /** Retrieve headers from tableData and initialize tableHeaderDataService */
     const dataRow = this.tableData[0];
     const dataRowHeaders = Object.keys(dataRow);
 
@@ -96,6 +108,42 @@ export class DataTableComponent implements OnInit {
       return { label, value: dataRowHeaders[index] };
     });
 
-    this.service.setTableHeaderData(this.titleCaseHeaders);
+    this.tableHeaderDataService.setTableHeaderData(this.titleCaseHeaders);
+    /** END - Retrieve headers from tableData and initialize tableHeaderDataService */
+
+    /** Retrieve current rules list from rules service and apply filters */
+    this.rulesSubscription = this.rulesStoreService
+      .getObservableRulesStore()
+      .subscribe((rule) => {
+        this.currentRules = rule;
+        this.applyFilters(this.tableData, this.currentRules);
+      });
+
+    this.applyFilters(this.tableData, this.currentRules);
+  }
+
+  ngOnDestroy(): void {
+    if (this.rulesSubscription) {
+      this.rulesSubscription.unsubscribe();
+    }
+  }
+
+  /**
+   * @todo Filtering logic should be abstracted out of component
+   * applyFilters takes in tableData and currentRules to return filteredTableData
+   * */
+  applyFilters(
+    tableData: Array<Record<string, string | number>>,
+    rules: Array<RulesType>
+  ): Array<Record<string, string | number>> {
+    if (rules.length === 0) {
+      return tableData;
+    }
+
+    const filteredTableData = tableData.filter((data) => {
+      return data;
+    });
+
+    return filteredTableData;
   }
 }

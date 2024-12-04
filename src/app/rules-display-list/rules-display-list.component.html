@@ -1,6 +1,24 @@
 <div>
   <p>Current rules applied:</p>
   <div *ngFor="let rule of currentRules; index as i">
-    <p-card [header]="'Rule ' + (i + 1) + ':'"> </p-card>
+    <p-card [header]="'Rule ' + (i + 1) + ':'">
+      <ul>
+        <li *ngFor="let condition of rule">
+          {{
+            "Filter " +
+              condition.column +
+              " where values are " +
+              FilterConditionEnum[condition.filterCondition].replaceAll(
+                "_",
+                " "
+              ) +
+              " " +
+              condition.filterValue +
+              " " +
+              (condition.logicalOperator || "")
+          }}
+        </li>
+      </ul>
+    </p-card>
   </div>
 </div>

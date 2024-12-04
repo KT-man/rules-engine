@@ -20,8 +20,10 @@ export class RulesDisplayListComponent implements OnInit {
   currentRules: Array<RulesType>;
   FilterConditionEnum = FilterConditionEnum;
 
-  ngOnInit = () => {
+  ngOnInit() {
+    // this.rulesService.getObservableRulesStore().subscribe((rule) => {
+    //   this.currentRules = rule;
+    // });
     this.currentRules = this.rulesService.getRulesStore();
-    console.log(this.currentRules);
-  };
+  }
 }
