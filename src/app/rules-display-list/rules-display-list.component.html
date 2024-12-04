@@ -1,6 +1,6 @@
-<div>
+<div class="displayListWrapper">
   <p>Current rules applied:</p>
-  <div *ngFor="let rule of currentRules; index as i">
+  <div *ngFor="let rule of currentRules; index as i" class="cardWrapper">
     <p-card [header]="'Rule ' + (i + 1) + ':'">
       <ul>
         <li *ngFor="let condition of rule">

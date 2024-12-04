@@ -1,4 +1,16 @@
+.displayListWrapper {
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+}
+
 .buttonWrapper {
   display: flex;
   gap: 8px;
+}
+
+.cardWrapper {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
 }
