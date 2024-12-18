@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import FilterConditionEnum from '../types/FilterConditionEnum';
 @Component({
   selector: 'app-data-table',
   standalone: true,
-  imports: [TableModule, CommonModule],
+  imports: [TableModule, CommonModule, TitleCasePipe],
   templateUrl: './data-table.component.html',
   styleUrl: './data-table.component.css',
 })
@@ -36,6 +36,7 @@ export class DataTableComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const titleCasePipe = new TitleCasePipe();
     /**
      * Mock Data Values
      * Extension would be to fetch from external API or to read from a file
@@ -98,11 +99,16 @@ export class DataTableComponent implements OnInit {
     this.headerLabels = Object.keys(dataRow).map((header) => {
       const spacedStr = header.replace(/([a-z])([A-Z])/g, '$1 $2');
 
+      // const titleCaseStr = spacedStr
+      //   .split(' ') // Split the string into words
+      //   .map(
+      //     (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      //   ) // Title case each word
+      //   .join(' ');
+
       const titleCaseStr = spacedStr
-        .split(' ') // Split the string into words
-        .map(
-          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-        ) // Title case each word
+        .split(' ')
+        .map((word) => titleCasePipe.transform(word))
         .join(' ');
 
       return titleCaseStr;
